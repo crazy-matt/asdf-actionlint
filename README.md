@@ -9,11 +9,17 @@
 
 # Contents
 
+- [asdf-actionlint ![Build](https://github.com/crazy-matt/asdf-actionlint/actions/workflows/build.yml) [![Lint](https://github.com/crazy-matt/asdf-actionlint/actions/workflows/lint.yml/badge.svg)](https://github.com/crazy-matt/asdf-actionlint/actions/workflows/lint.yml)](#asdf-actionlint--)
 - [Contents](#contents)
+- [Build History](#build-history)
 - [Dependencies](#dependencies)
 - [Install](#install)
 - [Contributing](#contributing)
 - [License](#license)
+
+# Build History
+
+[![Build history](https://buildstats.info/github/chart/crazy-matt/asdf-actionlint?branch=main)](https://github.com/crazy-matt/asdf-actionlint/actions)
 
 # Dependencies
 
