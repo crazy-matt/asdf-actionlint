@@ -38,7 +38,6 @@ list_all_versions() {
 install_version() {
   local install_type="$1"
   local version="$2"
-  #local install_path="$3"
   local install_path="${3%/bin}/bin"
 
   if [ "$install_type" != "version" ]; then
@@ -150,16 +149,16 @@ get_download_url() {
   local -r keyid="${3:-}"
 
   case "${type}" in
-    tarball)
-      local -r filename="$(get_tarball_filename "${version}")"
-      ;;
-    checksum)
-      local -r filename="$(get_checksum_filename "${version}")"
-      ;;
-    *)
-      echo "${type} is not a valid type of URL to download" >&2
-      exit 1
-      ;;
+  tarball)
+    local -r filename="$(get_tarball_filename "${version}")"
+    ;;
+  checksum)
+    local -r filename="$(get_checksum_filename "${version}")"
+    ;;
+  *)
+    echo "${type} is not a valid type of URL to download" >&2
+    exit 1
+    ;;
   esac
 
   echo "$GH_REPO/releases/download/v${version}/${filename}"
