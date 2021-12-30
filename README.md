@@ -7,15 +7,16 @@
 
 </div>
 
-# Contents
+<details open="open">
+<summary>Table of Contents</summary>
 
-- [asdf-actionlint ![Build](https://github.com/crazy-matt/asdf-actionlint/actions/workflows/build.yml) [![Lint](https://github.com/crazy-matt/asdf-actionlint/actions/workflows/lint.yml/badge.svg)](https://github.com/crazy-matt/asdf-actionlint/actions/workflows/lint.yml)](#asdf-actionlint--)
-- [Contents](#contents)
 - [Build History](#build-history)
 - [Dependencies](#dependencies)
 - [Install](#install)
 - [Contributing](#contributing)
 - [License](#license)
+
+</details>
 
 # Build History
 
