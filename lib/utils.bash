@@ -92,9 +92,11 @@ verify() {
   local -r arch="$(get_arch)"
   local -r checksum_path="${ASDF_DOWNLOAD_PATH}/$(get_checksum_filename "${version}")"
 
-  if ! curl -fs "$(get_download_url "${version}" "checksum")" -o "${checksum_path}"; then
+  if ! curl "${curl_opts[@]}" "$(get_download_url "${version}" "checksum")" -o "${checksum_path}"; then
     echo "couldn't download checksum file" >&2
   fi
+
+  shasum_command="shasum -a 256"
 
   echo ---
   echo ---
@@ -103,7 +105,6 @@ verify() {
   ${shasum_command} -c --ignore-missing <(grep "$(get_tarball_filename "${version}")" "${checksum_path}")
   echo ===
 
-  shasum_command="shasum -a 256"
   if ! command -v shasum &>/dev/null; then
     shasum_command=sha256sum
   fi
