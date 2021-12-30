@@ -96,6 +96,13 @@ verify() {
     echo "couldn't download checksum file" >&2
   fi
 
+  echo ---
+  echo ---
+  cat "${checksum_path}"
+  echo ---
+  ${shasum_command} -c --ignore-missing <(grep "$(get_tarball_filename "${version}")" "${checksum_path}")
+  echo ===
+
   shasum_command="shasum -a 256"
   if ! command -v shasum &>/dev/null; then
     shasum_command=sha256sum
