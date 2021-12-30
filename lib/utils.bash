@@ -98,13 +98,6 @@ verify() {
 
   shasum_command="shasum -a 256"
 
-  echo ---
-  echo ---
-  cat "${checksum_path}"
-  echo ---
-  ${shasum_command} -c --ignore-missing <(grep "$(get_tarball_filename "${version}")" "${checksum_path}")
-  echo ===
-
   if ! command -v shasum &>/dev/null; then
     shasum_command=sha256sum
   fi
