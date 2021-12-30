@@ -98,10 +98,17 @@ verify() {
 
   shasum_command="shasum -a 256"
 
+  echo ---
+  echo ---
+  cat "${checksum_path}"
+  echo ---
+  ls -lna "${ASDF_DOWNLOAD_PATH}"
+  echo ===
+
   if ! command -v shasum &>/dev/null; then
     shasum_command=sha256sum
   fi
-  if ! (cd "${ASDF_DOWNLOAD_PATH}" && ${shasum_command} -c --ignore-missing <(grep "$(get_tarball_filename "${version}")" "${checksum_path}")); then
+  if ! (cd "${ASDF_DOWNLOAD_PATH}" && ${shasum_command} -c <(grep "$(get_tarball_filename "${version}")" "${checksum_path}")); then
     echo "checksum verification failed" >&2
     return 1
   fi
