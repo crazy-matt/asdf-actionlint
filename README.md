@@ -24,6 +24,7 @@
 # Dependencies
 
 - `bash`, `curl`, `tar`: generic POSIX utilities.
+- ASDF_SKIP_VERIFY: skip verifying checksums.
 - ASDF__OVERWRITE_ARCH: set this environment variable to force the plugin to use a specified processor architecture rather than the automatically detected value. Useful, for example, for allowing users on M1 Macs to install amd64 binaries when there's no arm64 binary available.
 
 # Install

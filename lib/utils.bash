@@ -5,6 +5,7 @@ set -euo pipefail
 GH_REPO="https://github.com/rhysd/actionlint"
 TOOL_NAME="actionlint"
 TOOL_TEST="actionlint --version"
+SKIP_VERIFY=${ASDF_SKIP_VERIFY:-"false"}
 
 fail() {
   echo -e "asdf-$TOOL_NAME: $*"
@@ -34,18 +35,6 @@ list_all_versions() {
   list_github_tags
 }
 
-download_release() {
-  local version filename url
-  version="$1"
-  filename="$2"
-
-  # TODO: Adapt the release URL convention for actionlint
-  url="$GH_REPO/archive/v${version}.tar.gz"
-
-  echo "* Downloading $TOOL_NAME release $version..."
-  curl "${curl_opts[@]}" -o "$filename" -C - "$url" || fail "Could not download $url"
-}
-
 install_version() {
   local install_type="$1"
   local version="$2"
@@ -60,7 +49,6 @@ install_version() {
     mkdir -p "$install_path"
     cp -r "$ASDF_DOWNLOAD_PATH"/* "$install_path"
 
-    # TODO: Asert actionlint executable exists.
     local tool_cmd
     tool_cmd="$(echo "$TOOL_TEST" | cut -d' ' -f1)"
 
@@ -74,6 +62,48 @@ install_version() {
     rm -rf "$install_path"
     fail "An error ocurred while installing $TOOL_NAME $version."
   )
+}
+
+download_release() {
+  local version filename url
+  version="$1"
+  filename="$2"
+
+  url="$(get_download_url "${version}" "tarball")"
+
+  echo "* Downloading $TOOL_NAME release $version from ${url}..."
+
+  if curl "${curl_opts[@]}" -o "$filename" -C - "$url"; then
+    if [ "${SKIP_VERIFY}" == "false" ]; then
+      echo "Verifying checksum..."
+      verify "${version}" "${filename}"
+    else
+      echo "Skipping verifying checksums as explicitly requested with ASDF_SKIP_VERIFY"
+    fi
+  else
+    fail "Error: ${TOOL_NAME} version ${version} not found"
+  fi
+}
+
+verify() {
+  # Returns 1 on checksum error.
+  local -r version="$1"
+  local -r platform="$(get_platform)"
+  local -r arch="$(get_arch)"
+  local -r checksum_path="${ASDF_DOWNLOAD_PATH}/$(get_checksum_filename "${version}")"
+
+  if ! curl -fs "$(get_download_url "${version}" "checksum")" -o "${checksum_path}"; then
+    echo "couldn't download checksum file" >&2
+  fi
+
+  shasum_command="shasum -a 256"
+  if ! command -v shasum &>/dev/null; then
+    shasum_command=sha256sum
+  fi
+  if ! (cd "${ASDF_DOWNLOAD_PATH}" && ${shasum_command} -c <(grep "${platform}_${arch}.tar.gz" "${checksum_path}")); then
+    echo "checksum verification failed" >&2
+    return 1
+  fi
 }
 
 get_platform() {
@@ -99,4 +129,37 @@ get_arch() {
   else
     echo "amd64"
   fi
+}
+
+get_tarball_filename() {
+  local -r version="$1"
+  local -r platform="$(get_platform)"
+  local -r arch="$(get_arch)"
+  echo "${TOOL_NAME}_${version}_${platform}_${arch}.tar.gz"
+}
+
+get_checksum_filename() {
+  local -r version="$1"
+  echo "${TOOL_NAME}_${version}_checksums.txt"
+}
+
+get_download_url() {
+  local -r version="$1"
+  local -r type="$2"
+  local -r keyid="${3:-}"
+
+  case "${type}" in
+    tarball)
+      local -r filename="$(get_tarball_filename "${version}")"
+      ;;
+    checksum)
+      local -r filename="$(get_checksum_filename "${version}")"
+      ;;
+    *)
+      echo "${type} is not a valid type of URL to download" >&2
+      exit 1
+      ;;
+  esac
+
+  echo "$GH_REPO/releases/download/v${version}/${filename}"
 }
