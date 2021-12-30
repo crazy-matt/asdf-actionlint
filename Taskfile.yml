@@ -40,14 +40,6 @@ tasks:
     - docker run --rm --volume "{{.REPO_ABS_ROOT_PATH}}:/work" tmknom/markdownlint:latest --config .linters/markdown-linter.yml --ignore CHANGELOG.md .
     silent: true
 
-  lint:gha:actionlint:
-    desc: Lint GitHub Action workflows
-    cmds:
-    - asdf plugin add actionlint https://github.com/crazy-matt/asdf-actionlint.git || true; asdf install actionlint $(asdf current actionlint | tr -s ' ' | cut -d' ' -f2)
-    # - plugin_name="actionlint"; asdf plugin add "${plugin_name}" || true; asdf install "${plugin_name}" $(asdf current "${plugin_name}" | tr -s ' ' | cut -d' ' -f2)
-    - actionlint
-    silent: true
-
   lint:yaml:yamllint:
     desc: Lint YAML files
     cmds:
