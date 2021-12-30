@@ -2,7 +2,6 @@
 
 set -euo pipefail
 
-# TODO: Ensure this is the correct GitHub homepage where releases can be downloaded for actionlint.
 GH_REPO="https://github.com/rhysd/actionlint"
 TOOL_NAME="actionlint"
 TOOL_TEST="actionlint --version"
@@ -31,7 +30,6 @@ list_github_tags() {
 }
 
 list_all_versions() {
-  # TODO: Adapt this. By default we simply list the tag names from GitHub releases.
   # Change this function if actionlint has other means of determining installable versions.
   list_github_tags
 }
@@ -76,4 +74,29 @@ install_version() {
     rm -rf "$install_path"
     fail "An error ocurred while installing $TOOL_NAME $version."
   )
+}
+
+get_platform() {
+  local -r kernel="$(uname -s)"
+  if [[ $OSTYPE == "msys" || $kernel == "CYGWIN"* || $kernel == "MINGW"* ]]; then
+    echo windows
+  else
+    uname | tr '[:upper:]' '[:lower:]'
+  fi
+}
+
+get_arch() {
+  local -r machine="$(uname -m)"
+  OVERWRITE_ARCH=${ASDF_OVERWRITE_ARCH:-"false"}
+  if [[ $OVERWRITE_ARCH != "false" ]]; then
+    echo "$OVERWRITE_ARCH"
+  elif [[ $machine == "arm64" ]] || [[ $machine == "aarch64" ]]; then
+    echo "arm64"
+  elif [[ $machine == *"arm"* ]] || [[ $machine == *"aarch"* ]]; then
+    echo "arm"
+  elif [[ $machine == *"386"* ]]; then
+    echo "386"
+  else
+    echo "amd64"
+  fi
 }
