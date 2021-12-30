@@ -7,30 +7,27 @@ on:
   pull_request:
 
 jobs:
-  shellcheck:
+  task_linters:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Install asdf dependencies
-        uses: asdf-vm/actions/install@v1
-
-      - name: Run ShellCheck
-        run: scripts/shellcheck.bash
-
-  shellfmt:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
+      - name: 'Set Job Vars'
+        id: vars
+        run: |
+          echo "::set-output name=task_version::$(cat .tool-versions | grep -w task | cut -d ' ' -f2)"
 
       - name: Install asdf dependencies
         uses: asdf-vm/actions/install@v1
 
-      - name: List file to shfmt
-        run: shfmt -f .
+      - name: Install Task
+        uses: arduino/setup-task@v1.0.0
+        with:
+          version: ${{ steps.vars.outputs.task_version }}
 
-      - name: Run shfmt
-        run: scripts/shfmt.bash
+      - name: Run All Linters
+        run: task lint
 
+      - name: Run All Formatters
+        run: task format
