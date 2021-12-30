@@ -29,7 +29,6 @@ tasks:
     desc: Run all linters
     cmds:
     - task: lint:markdown:markdownlint
-    - task: lint:gha:actionlint
     - task: lint:yaml:yamllint
     - task: lint:shellscript:shellcheck
     silent: true
