@@ -54,7 +54,6 @@ install_version() {
 
     ls -lna "$install_path"
     chmod +x "$install_path/$tool_cmd"
-    #test -x "$install_path/bin/$tool_cmd" || fail "Expected $install_path/bin/$tool_cmd to be executable."
     test -x "$install_path/$tool_cmd" || fail "Expected $install_path/$tool_cmd to be executable."
 
     echo "$TOOL_NAME $version installation was successful!"
@@ -98,12 +97,7 @@ verify() {
 
   shasum_command="shasum -a 256"
 
-  echo ---
-  echo ---
-  cat "${checksum_path}"
-  echo ---
   ls -lna "${ASDF_DOWNLOAD_PATH}"
-  echo ===
 
   if ! command -v shasum &>/dev/null; then
     shasum_command=sha256sum
