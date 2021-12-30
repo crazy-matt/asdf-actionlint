@@ -95,8 +95,6 @@ verify() {
 
   shasum_command="shasum -a 256"
 
-  ls -lna "${ASDF_DOWNLOAD_PATH}"
-
   if ! command -v shasum &>/dev/null; then
     shasum_command=sha256sum
   fi
