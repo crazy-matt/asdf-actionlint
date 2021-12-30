@@ -71,7 +71,7 @@ download_release() {
 
   url="$(get_download_url "${version}" "tarball")"
 
-  echo "* Downloading $TOOL_NAME release $version from ${url}..."
+  echo "* Downloading $TOOL_NAME release $version from '${url}'..."
 
   if curl "${curl_opts[@]}" -o "$filename" -C - "$url"; then
     if [ "${SKIP_VERIFY}" == "false" ]; then
@@ -100,7 +100,7 @@ verify() {
   if ! command -v shasum &>/dev/null; then
     shasum_command=sha256sum
   fi
-  if ! (cd "${ASDF_DOWNLOAD_PATH}" && ${shasum_command} -c <(grep "${platform}_${arch}.tar.gz" "${checksum_path}")); then
+  if ! (cd "${ASDF_DOWNLOAD_PATH}" && ${shasum_command} -c --ignore-missing <(grep "$(get_tarball_filename "${version}")" "${checksum_path}")); then
     echo "checksum verification failed" >&2
     return 1
   fi
