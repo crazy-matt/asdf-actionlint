@@ -3,7 +3,8 @@
 extends: default
 
 ignore: |
-  .github/workflows/*
+  **.github/workflows/**
+  **.history/**
 
 rules:
   empty-values: enable

@@ -42,7 +42,7 @@ tasks:
   lint:yaml:yamllint:
     desc: Lint YAML files
     cmds:
-    - docker run --rm --volume "{{.REPO_ABS_ROOT_PATH}}:/work" tmknom/yamllint:latest --config-file .linters/markdown-linter.yml .
+    - docker run --rm --volume "{{.REPO_ABS_ROOT_PATH}}:/work" tmknom/yamllint:latest --config-file .linters/yaml-linter.yml .
     silent: true
 
   lint:shellscript:shellcheck:
