@@ -2,7 +2,7 @@
 
 set -euo pipefail
 
-GH_REPO="https://github.com/rhysd/actionlint"
+GH_REPO="https://github.com/kjanat/actionlint"
 TOOL_NAME="actionlint"
 TOOL_TEST="actionlint --version"
 SKIP_VERIFY=${ASDF_SKIP_VERIFY:-"false"}
